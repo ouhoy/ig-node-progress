@@ -4,6 +4,8 @@ const puppeteer_1 = require("puppeteer");
 const path = require("path");
 const dotenv = require("dotenv");
 dotenv.config();
+const progress_1 = require("./progress");
+const currentProgress = `${progress_1.default.progressBar.toString().replaceAll(",", " ")}  ${progress_1.default.progressPercentage.toFixed(5)}`;
 const imgFolder = path.join(__dirname, 'img');
 const url = "https://instagram.com";
 const editProfilePage = `https://www.instagram.com/accounts/edit/`;
@@ -11,8 +13,6 @@ const editProfilePage = `https://www.instagram.com/accounts/edit/`;
 const emailInput = `#loginForm > div > div:nth-child(1) > div > label > input`;
 const passwordInput = `#loginForm > div > div:nth-child(2) > div > label > input`;
 const loginButton = `#loginForm > div > div:nth-child(3) > button`;
-//Profile Configurations
-const bioInput = `textarea`;
 (async () => {
     const browser = await puppeteer_1.default.launch({ headless: false });
     const page = await browser.newPage();
@@ -33,10 +33,11 @@ const bioInput = `textarea`;
     console.log("Bio is there");
     await page.evaluateHandle(() => {
         const bioText = document.getElementById("pepBio");
-        bioText.value = `${bioText.value} \n ${new Date()}`;
+        bioText.value = `${bioText.value} \n`;
         return;
     });
-    await page.type('textarea[id]', '', { delay: 20 });
-    // await browser.close();
+    await page.type('textarea[id]', `${currentProgress}%`, { delay: 20 });
+    await page.locator("form div[role='button']").click();
+    await browser.close();
 })();
 //# sourceMappingURL=server.js.map

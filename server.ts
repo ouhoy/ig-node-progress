@@ -5,6 +5,9 @@ import * as dotenv from 'dotenv';
 
 dotenv.config()
 
+import updateProgress from "./progress";
+
+const currentProgress = `${updateProgress.progressBar.toString().replaceAll(",", " ")}  ${updateProgress.progressPercentage.toFixed(5)}`;
 
 const imgFolder = path.join(__dirname, 'img');
 const url = "https://instagram.com";
@@ -15,9 +18,6 @@ const emailInput: string = `#loginForm > div > div:nth-child(1) > div > label > 
 const passwordInput: string = `#loginForm > div > div:nth-child(2) > div > label > input`;
 const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
 
-//Profile Configurations
-
-const bioInput = `textarea`;
 
 (async () => {
     const browser = await puppeteer.launch({headless: false});
@@ -51,15 +51,16 @@ const bioInput = `textarea`;
 
     console.log("Bio is there")
 
+
     await page.evaluateHandle(() => {
         const bioText = (<HTMLInputElement>document.getElementById("pepBio"));
-        bioText.value = `${bioText.value} \n ${new Date()}`;
+        bioText.value = `${bioText.value} \n`;
 
         return
     });
 
-    await page.type('textarea[id]', '', {delay: 20})
+    await page.type('textarea[id]', `${currentProgress}%`, {delay: 20})
+    await page.locator("form div[role='button']").click();
 
-
-    // await browser.close();
+    await browser.close();
 })();
