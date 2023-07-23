@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 import * as path from "path";
-import * as fs from "fs";
+
 
 const imgFolder = path.join(__dirname, 'img');
 
@@ -19,8 +19,9 @@ const emailInput = `#loginForm > div > div:nth-child(1) > div > label > input`;
     console.log("Rendered!")
 
 
-    await page.screenshot({path: `./img/screenshot.jpg`})
-
+    const currentTime = new Date();
+    const creationDate = currentTime.toString().slice(0, 24)
+    await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
 
     await browser.close();
 })();
