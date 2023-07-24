@@ -14,7 +14,7 @@ const passwordInput = `#loginForm > div > div:nth-child(2) > div > label > input
 const loginButton = `#loginForm > div > div:nth-child(3) > button`;
 (async () => {
     const browser = await puppeteer_1.default.launch({
-        headless: false,
+        headless: true,
         args: [
             "--disable-setuid-sandbox",
             "--no-sandbox",

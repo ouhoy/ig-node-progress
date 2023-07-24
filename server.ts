@@ -21,7 +21,7 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
 
 (async () => {
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         args: [
             "--disable-setuid-sandbox",
             "--no-sandbox",
