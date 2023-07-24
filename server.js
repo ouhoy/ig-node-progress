@@ -14,7 +14,7 @@ const emailInput = `#loginForm > div > div:nth-child(1) > div > label > input`;
 const passwordInput = `#loginForm > div > div:nth-child(2) > div > label > input`;
 const loginButton = `#loginForm > div > div:nth-child(3) > button`;
 (async () => {
-    const browser = await puppeteer_1.default.launch({ headless: false });
+    const browser = await puppeteer_1.default.launch();
     const page = await browser.newPage();
     await page.goto(url);
     console.log("Waiting...");
