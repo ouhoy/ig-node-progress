@@ -21,17 +21,17 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
 
 (async () => {
     const browser = await puppeteer.launch({
-    args: [
-      "--disable-setuid-sandbox",
-      "--no-sandbox",
-      "--single-process",
-      "--no-zygote",
-    ],
-    executablePath:
-      process.env.NODE_ENV === "production"
-        ? process.env.PUPPETEER_EXECUTABLE_PATH
-        : puppeteer.executablePath(),
-  });
+        args: [
+            "--disable-setuid-sandbox",
+            "--no-sandbox",
+            "--single-process",
+            "--no-zygote",
+        ],
+        executablePath:
+            process.env.NODE_ENV === "production"
+                ? process.env.PUPPETEER_EXECUTABLE_PATH
+                : puppeteer.executablePath(),
+    });
     const page = await browser.newPage();
     await page.goto(url);
 
@@ -53,15 +53,17 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
     await page.locator(loginButton).click();
     console.log("Logging...")
 
-    // await page.waitForSelector(`iframe`, {timeout: 30_000});
+
     page.setDefaultNavigationTimeout(0);
     await page.waitForNavigation()
 
     console.log("Switching Pages...")
     await page.goto(editProfilePage)
 
-    // console.log("We there rn!")
+    console.log("At Edit page...")
+    console.log("Waiting for selector...")
 
+    await page.waitForSelector(`#pepBio`, {timeout: 30_000});
     await page.locator("#pepBio").click();
 
     console.log("Bio is there")
