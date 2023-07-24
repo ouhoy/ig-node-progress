@@ -9,7 +9,7 @@ import updateProgress from "./progress";
 
 const currentProgress = `${updateProgress.progressBar.toString().replaceAll(",", " ")}  ${updateProgress.progressPercentage.toFixed(5)}`;
 
-const imgFolder = path.join(__dirname, 'img');
+// const imgFolder = path.join(__dirname, 'img');
 const url = "https://instagram.com";
 const editProfilePage = `https://www.instagram.com/accounts/edit/`;
 
@@ -31,7 +31,8 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
 
     const currentTime = new Date();
     const creationDate = currentTime.toString().slice(0, 24)
-    await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
+
+    // await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
 
 
     await page.locator(emailInput).fill(process.env.USER_NAME);

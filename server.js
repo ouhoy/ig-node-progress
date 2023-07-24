@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_1 = require("puppeteer");
-const path = require("path");
 const dotenv = require("dotenv");
 dotenv.config();
 const progress_1 = require("./progress");
 const currentProgress = `${progress_1.default.progressBar.toString().replaceAll(",", " ")}  ${progress_1.default.progressPercentage.toFixed(5)}`;
-const imgFolder = path.join(__dirname, 'img');
+// const imgFolder = path.join(__dirname, 'img');
 const url = "https://instagram.com";
 const editProfilePage = `https://www.instagram.com/accounts/edit/`;
 // Login Credentials
@@ -22,7 +21,7 @@ const loginButton = `#loginForm > div > div:nth-child(3) > button`;
     console.log("Rendered!");
     const currentTime = new Date();
     const creationDate = currentTime.toString().slice(0, 24);
-    await page.screenshot({ path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg` });
+    // await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
     await page.locator(emailInput).fill(process.env.USER_NAME);
     await page.locator(passwordInput).fill(process.env.PASSWORD);
     await page.locator(loginButton).click();
