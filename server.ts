@@ -20,7 +20,9 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
 
 
 (async () => {
-    const browser = await puppeteer.launch({headless: false});
+    const browser = await puppeteer.launch({
+        headless: false, args: ["--no-sandbox"]
+    });
     const page = await browser.newPage();
     await page.goto(url);
 
