@@ -63,7 +63,7 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
     console.log("At Edit page...")
     console.log("Waiting for selector...")
 
-    await page.waitForSelector(`#pepBio`, {timeout: 30_000});
+    await page.waitForSelector(`#pepBio`, {timeout: 0});
     await page.locator("#pepBio").click();
 
     console.log("Bio is there")

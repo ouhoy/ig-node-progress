@@ -43,7 +43,7 @@ const loginButton = `#loginForm > div > div:nth-child(3) > button`;
     await page.goto(editProfilePage);
     console.log("At Edit page...");
     console.log("Waiting for selector...");
-    await page.waitForSelector(`#pepBio`, { timeout: 30000 });
+    await page.waitForSelector(`#pepBio`, { timeout: 0 });
     await page.locator("#pepBio").click();
     console.log("Bio is there");
     await page.evaluateHandle(() => {
