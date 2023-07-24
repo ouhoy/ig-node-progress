@@ -14,6 +14,7 @@ const passwordInput = `#loginForm > div > div:nth-child(2) > div > label > input
 const loginButton = `#loginForm > div > div:nth-child(3) > button`;
 (async () => {
     const browser = await puppeteer_1.default.launch({
+        headless: false,
         args: [
             "--disable-setuid-sandbox",
             "--no-sandbox",
@@ -42,15 +43,17 @@ const loginButton = `#loginForm > div > div:nth-child(3) > button`;
     console.log("Switching Pages...");
     await page.goto(editProfilePage);
     console.log("At Edit page...");
+    console.log("Bio is there");
+    await page.evaluateHandle(() => {
+        window.addEventListener("load", (event) => {
+            const bioText = document.getElementById("pepBio");
+            bioText.value = `${bioText.value} \n`;
+        });
+        return;
+    });
     console.log("Waiting for selector...");
     await page.waitForSelector(`#pepBio`, { timeout: 0 });
     await page.locator("#pepBio").click();
-    console.log("Bio is there");
-    await page.evaluateHandle(() => {
-        const bioText = document.getElementById("pepBio");
-        bioText.value = `${bioText.value} \n`;
-        return;
-    });
     await page.type('textarea[id]', `${currentProgress}%`, { delay: 20 });
     await page.locator("form div[role='button']").click();
     await browser.close();
