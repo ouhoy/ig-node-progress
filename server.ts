@@ -20,7 +20,7 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
 
 
 (async () => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
     await page.goto(url);
 
@@ -34,16 +34,19 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
 
     // await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
 
-
+    console.log("Entering Email and Password...")
     await page.locator(emailInput).fill(process.env.USER_NAME);
     await page.locator(passwordInput).fill(process.env.PASSWORD);
 
 
     await page.locator(loginButton).click();
+    console.log("Logging...")
 
+    // await page.waitForSelector(`iframe`, {timeout: 30_000});
+    page.setDefaultNavigationTimeout(0);
+    await page.waitForNavigation()
 
-    await page.waitForSelector(`iframe`, {timeout: 30_000});
-
+    console.log("Switching Pages...")
     await page.goto(editProfilePage)
 
     // console.log("We there rn!")

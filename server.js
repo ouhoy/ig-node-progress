@@ -13,7 +13,7 @@ const emailInput = `#loginForm > div > div:nth-child(1) > div > label > input`;
 const passwordInput = `#loginForm > div > div:nth-child(2) > div > label > input`;
 const loginButton = `#loginForm > div > div:nth-child(3) > button`;
 (async () => {
-    const browser = await puppeteer_1.default.launch();
+    const browser = await puppeteer_1.default.launch({ headless: false });
     const page = await browser.newPage();
     await page.goto(url);
     console.log("Waiting...");
@@ -22,10 +22,15 @@ const loginButton = `#loginForm > div > div:nth-child(3) > button`;
     const currentTime = new Date();
     const creationDate = currentTime.toString().slice(0, 24);
     // await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
+    console.log("Entering Email and Password...");
     await page.locator(emailInput).fill(process.env.USER_NAME);
     await page.locator(passwordInput).fill(process.env.PASSWORD);
     await page.locator(loginButton).click();
-    await page.waitForSelector(`iframe`, { timeout: 30000 });
+    console.log("Logging...");
+    // await page.waitForSelector(`iframe`, {timeout: 30_000});
+    page.setDefaultNavigationTimeout(0);
+    await page.waitForNavigation();
+    console.log("Switching Pages...");
     await page.goto(editProfilePage);
     // console.log("We there rn!")
     await page.locator("#pepBio").click();
