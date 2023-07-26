@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_1 = require("puppeteer");
+// import * as path from "path";
 const dotenv = require("dotenv");
 dotenv.config();
 const progress_1 = require("./progress");
-const currentProgress = `${progress_1.default.progressBar.toString().replaceAll(",", " ")}  ${progress_1.default.progressPercentage.toFixed(5)}`;
 // const imgFolder = path.join(__dirname, 'img');
 const url = "https://instagram.com";
 const editProfilePage = `https://www.instagram.com/accounts/edit/`;
@@ -12,7 +12,9 @@ const editProfilePage = `https://www.instagram.com/accounts/edit/`;
 const emailInput = `#loginForm > div > div:nth-child(1) > div > label > input`;
 const passwordInput = `#loginForm > div > div:nth-child(2) > div > label > input`;
 const loginButton = `#loginForm > div > div:nth-child(3) > button`;
-(async () => {
+const updateBio = async () => {
+    const { progressBar, progressPercentage } = (0, progress_1.default)();
+    const currentProgress = `${progressBar.toString().replaceAll(",", " ")}  ${progressPercentage.toFixed(5)}`;
     const browser = await puppeteer_1.default.launch({
         headless: false,
         args: [
@@ -30,8 +32,8 @@ const loginButton = `#loginForm > div > div:nth-child(3) > button`;
     console.log("Waiting...");
     await page.waitForSelector(emailInput, { timeout: 0 });
     console.log("Rendered!");
-    const currentTime = new Date();
-    const creationDate = currentTime.toString().slice(0, 24);
+    // const currentTime = new Date();
+    // const creationDate = currentTime.toString().slice(0, 24)
     // await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
     console.log("Entering Email and Password...");
     await page.locator(emailInput).fill(process.env.USER_NAME);
@@ -56,5 +58,8 @@ const loginButton = `#loginForm > div > div:nth-child(3) > button`;
     await page.type('textarea[id]', `${currentProgress}%`, { delay: 20 });
     await page.locator("form div[role='button']").click();
     await browser.close();
-})();
+};
+setInterval(function () {
+    updateBio().then();
+}, 1000 * 60);
 //# sourceMappingURL=server.js.map

@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import * as path from "path";
+// import * as path from "path";
 
 import * as dotenv from 'dotenv';
 
@@ -7,7 +7,6 @@ dotenv.config()
 
 import updateProgress from "./progress";
 
-const currentProgress = `${updateProgress.progressBar.toString().replaceAll(",", " ")}  ${updateProgress.progressPercentage.toFixed(5)}`;
 
 // const imgFolder = path.join(__dirname, 'img');
 const url = "https://instagram.com";
@@ -19,7 +18,11 @@ const passwordInput: string = `#loginForm > div > div:nth-child(2) > div > label
 const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
 
 
-(async () => {
+const updateBio = async (): Promise<void> => {
+    const {progressBar, progressPercentage} = updateProgress()
+
+    const currentProgress = `${progressBar.toString().replaceAll(",", " ")}  ${progressPercentage.toFixed(5)}`;
+
     const browser = await puppeteer.launch({
         headless: false,
         args: [
@@ -41,8 +44,8 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
     console.log("Rendered!")
 
 
-    const currentTime = new Date();
-    const creationDate = currentTime.toString().slice(0, 24)
+    // const currentTime = new Date();
+    // const creationDate = currentTime.toString().slice(0, 24)
 
     // await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
 
@@ -83,4 +86,11 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
     await page.locator("form div[role='button']").click();
 
     await browser.close();
-})();
+
+};
+
+
+setInterval(function () {
+        updateBio().then();
+    },
+    1000 * 60);

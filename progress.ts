@@ -14,7 +14,7 @@ function calculateProgress(startDate, endDate) {
 function updateProgress() {
     const startDate = new Date(process.env.START_DATE);
     const endDate = new Date(process.env.END_DATE);
-    const progressPercentage = calculateProgress(startDate, endDate);
+    const progressPercentage: number = calculateProgress(startDate, endDate);
     const numberOfBars = Math.floor((progressPercentage * 10) / 100)
 
 
@@ -35,4 +35,4 @@ function updateProgress() {
 }
 
 
-export default updateProgress();
+export default updateProgress;
