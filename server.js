@@ -48,8 +48,9 @@ const loginButton = `#loginForm > div > div:nth-child(3) > button`;
     await page.locator("#pepBio").click();
     console.log("Bio is there");
     await page.evaluateHandle(() => {
+        // TODO: This should be validated in case there is no bio!
         const bioText = document.getElementById("pepBio");
-        bioText.value = `${bioText.value} \n`;
+        bioText.value = `${bioText.value.slice(0, bioText.value.length - 30)}`;
         return;
     });
     await page.type('textarea[id]', `${currentProgress}%`, { delay: 20 });

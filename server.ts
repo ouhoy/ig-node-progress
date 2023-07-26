@@ -72,9 +72,9 @@ const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
 
 
     await page.evaluateHandle(() => {
-
+        // TODO: This should be validated in case there is no bio!
         const bioText = (<HTMLInputElement>document.getElementById("pepBio"));
-        bioText.value = `${bioText.value} \n`;
+        bioText.value = `${bioText.value.slice(0, bioText.value.length - 30)}`;
 
         return
     });
