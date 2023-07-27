@@ -12,6 +12,9 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 /img
 
+#Compiled JavaScript
+*.js
+
 # Runtime data
 pids
 *.pid
