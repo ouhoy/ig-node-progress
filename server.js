@@ -1,11 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_1 = require("puppeteer");
-// import * as path from "path";
 const dotenv = require("dotenv");
 dotenv.config();
 const progress_1 = require("./progress");
-// const imgFolder = path.join(__dirname, 'img');
 const url = "https://instagram.com";
 const editProfilePage = `https://www.instagram.com/accounts/edit/`;
 // Login Credentials
@@ -29,11 +27,10 @@ const updateBio = async () => {
     });
     const page = await browser.newPage();
     await page.goto(url);
+    console.log(currentProgress);
     console.log("Waiting...");
     await page.waitForSelector(emailInput, { timeout: 0 });
     console.log("Rendered!");
-    // const currentTime = new Date();
-    // const creationDate = currentTime.toString().slice(0, 24)
     // await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
     console.log("Entering Email and Password...");
     await page.locator(emailInput).fill(process.env.USER_NAME);
@@ -59,7 +56,5 @@ const updateBio = async () => {
     await page.locator("form div[role='button']").click();
     await browser.close();
 };
-setInterval(function () {
-    updateBio().then();
-}, 1000 * 60);
+updateBio().then();
 //# sourceMappingURL=server.js.map

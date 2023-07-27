@@ -22,7 +22,6 @@ function updateProgress() {
         }
         progressBar.push("⬜");
     }
-    console.log(progressBar, progressPercentage);
     return { progressBar, progressPercentage };
 }
 exports.default = updateProgress;

@@ -30,7 +30,7 @@ function updateProgress() {
 
     }
 
-    console.log(progressBar, progressPercentage)
+
     return {progressBar, progressPercentage}
 }
 

@@ -1,6 +1,4 @@
 import puppeteer from 'puppeteer';
-// import * as path from "path";
-
 import * as dotenv from 'dotenv';
 
 dotenv.config()
@@ -8,7 +6,7 @@ dotenv.config()
 import updateProgress from "./progress";
 
 
-// const imgFolder = path.join(__dirname, 'img');
+
 const url = "https://instagram.com";
 const editProfilePage = `https://www.instagram.com/accounts/edit/`;
 
@@ -39,13 +37,11 @@ const updateBio = async (): Promise<void> => {
     const page = await browser.newPage();
     await page.goto(url);
 
+    console.log(currentProgress)
     console.log("Waiting...")
     await page.waitForSelector(emailInput, {timeout: 0});
     console.log("Rendered!")
 
-
-    // const currentTime = new Date();
-    // const creationDate = currentTime.toString().slice(0, 24)
 
     // await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
 
@@ -90,7 +86,5 @@ const updateBio = async (): Promise<void> => {
 };
 
 
-setInterval(function () {
-        updateBio().then();
-    },
-    1000 * 60);
+updateBio().then();
+
