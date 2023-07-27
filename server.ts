@@ -6,7 +6,6 @@ import {URL, BIO_PAGE} from "./model/pages";
 
 dotenv.config()
 
-
 const logIn = async (userName: string, password: string, page: Page) => {
 
     await page.waitForSelector(selectors.emailInput, {timeout: 0});
@@ -23,6 +22,7 @@ const logIn = async (userName: string, password: string, page: Page) => {
 
 const updateBio = async (progress: string, page: Page) => {
 
+    console.log(`Navigating to: ${BIO_PAGE}...`)
     await page.goto(BIO_PAGE)
     await page.waitForSelector(selectors.bioTextarea, {timeout: 0});
     await page.locator(selectors.bioTextarea).click();
@@ -31,15 +31,17 @@ const updateBio = async (progress: string, page: Page) => {
     await page.evaluateHandle(() => {
 
         // TODO: This should be validated in case there is no bio!
-        const bioText = (<HTMLInputElement>document.getElementById(selectors.bioTextarea));
+        const bioText = (<HTMLInputElement>document.querySelector(selectors.bioTextarea));
         bioText.value = `${bioText.value.slice(0, bioText.value.length - 30)}`;
 
         return
     });
 
+    console.log(`Typing ${progress}%...`)
     await page.type(selectors.bioTextarea, `${progress}%`, {delay: 20})
     await page.locator(selectors.submitButton).click();
 
+    console.log("Bio Updated!")
 }
 
 const openPage = async (): Promise<void> => {
@@ -65,10 +67,10 @@ const openPage = async (): Promise<void> => {
     await logIn(process.env.USER_NAME, process.env.PASSWORD, page)
     await updateBio(currentProgress, page)
 
+    console.log("Goodbye!")
     await browser.close();
 
 };
-
 
 
 openPage().then();
