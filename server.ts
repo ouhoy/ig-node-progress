@@ -17,15 +17,35 @@ const logIn = async (userName: string, password: string, page: Page) => {
     console.log("Logging...")
     await page.locator(selectors.loginButton).click();
 
-    //TODO: Check for page refresh/reload to indicate success login
+    await page.waitForNavigation({timeout: 0})
+    console.log("Logged In")
 }
 
+const updateBio = async (progress: string, page: Page) => {
 
-const updateBio = async (): Promise<void> => {
+    await page.goto(BIO_PAGE)
+    await page.waitForSelector(selectors.bioTextarea, {timeout: 0});
+    await page.locator(selectors.bioTextarea).click();
+
+
+    await page.evaluateHandle(() => {
+
+        // TODO: This should be validated in case there is no bio!
+        const bioText = (<HTMLInputElement>document.getElementById(selectors.bioTextarea));
+        bioText.value = `${bioText.value.slice(0, bioText.value.length - 30)}`;
+
+        return
+    });
+
+    await page.type(selectors.bioTextarea, `${progress}%`, {delay: 20})
+    await page.locator(selectors.submitButton).click();
+
+}
+
+const openPage = async (): Promise<void> => {
     const {progressBar, progressPercentage} = updateProgress()
 
     const currentProgress = `${progressBar.toString().replaceAll(",", " ")}  ${progressPercentage.toFixed(5)}`;
-
     const browser = await puppeteer.launch({
         headless: false,
         args: [
@@ -42,42 +62,14 @@ const updateBio = async (): Promise<void> => {
     const page = await browser.newPage();
     await page.goto(URL);
 
-    console.log(currentProgress)
     await logIn(process.env.USER_NAME, process.env.PASSWORD, page)
-
-
-    page.setDefaultNavigationTimeout(0);
-    await page.waitForNavigation()
-
-    console.log("Switching Pages...")
-    await page.goto(BIO_PAGE)
-
-    console.log("At Edit page...")
-    console.log("Waiting for selector...")
-
-
-    await page.waitForSelector(`#pepBio`, {timeout: 0});
-    await page.locator("#pepBio").click();
-
-    console.log("Bio is there")
-
-
-    await page.evaluateHandle(() => {
-
-        // TODO: This should be validated in case there is no bio!
-        const bioText = (<HTMLInputElement>document.getElementById("pepBio"));
-        bioText.value = `${bioText.value.slice(0, bioText.value.length - 30)}`;
-
-        return
-    });
-
-    await page.type('textarea[id]', `${currentProgress}%`, {delay: 20})
-    await page.locator("form div[role='button']").click();
+    await updateBio(currentProgress, page)
 
     await browser.close();
 
 };
 
 
-updateBio().then();
+
+openPage().then();
 
