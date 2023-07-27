@@ -1,19 +1,24 @@
-import puppeteer from 'puppeteer';
 import * as dotenv from 'dotenv';
+import puppeteer, {Page} from 'puppeteer';
+import updateProgress from "./progress";
+import selectors from "./model/elements";
+import {URL, BIO_PAGE} from "./model/pages";
 
 dotenv.config()
 
-import updateProgress from "./progress";
 
+const logIn = async (userName: string, password: string, page: Page) => {
 
+    await page.waitForSelector(selectors.emailInput, {timeout: 0});
+    console.log("Entering Email...")
+    await page.locator(selectors.emailInput).fill(userName);
+    console.log("Entering Password...")
+    await page.locator(selectors.passwordInput).fill(password);
+    console.log("Logging...")
+    await page.locator(selectors.loginButton).click();
 
-const url = "https://instagram.com";
-const editProfilePage = `https://www.instagram.com/accounts/edit/`;
-
-// Login Credentials
-const emailInput: string = `#loginForm > div > div:nth-child(1) > div > label > input`
-const passwordInput: string = `#loginForm > div > div:nth-child(2) > div > label > input`;
-const loginButton: string = `#loginForm > div > div:nth-child(3) > button`;
+    //TODO: Check for page refresh/reload to indicate success login
+}
 
 
 const updateBio = async (): Promise<void> => {
@@ -35,30 +40,17 @@ const updateBio = async (): Promise<void> => {
                 : puppeteer.executablePath(),
     });
     const page = await browser.newPage();
-    await page.goto(url);
+    await page.goto(URL);
 
     console.log(currentProgress)
-    console.log("Waiting...")
-    await page.waitForSelector(emailInput, {timeout: 0});
-    console.log("Rendered!")
-
-
-    // await page.screenshot({path: `${imgFolder}/screenshot-${creationDate.replaceAll(":", "-")}.jpg`})
-
-    console.log("Entering Email and Password...")
-    await page.locator(emailInput).fill(process.env.USER_NAME);
-    await page.locator(passwordInput).fill(process.env.PASSWORD);
-
-
-    await page.locator(loginButton).click();
-    console.log("Logging...")
+    await logIn(process.env.USER_NAME, process.env.PASSWORD, page)
 
 
     page.setDefaultNavigationTimeout(0);
     await page.waitForNavigation()
 
     console.log("Switching Pages...")
-    await page.goto(editProfilePage)
+    await page.goto(BIO_PAGE)
 
     console.log("At Edit page...")
     console.log("Waiting for selector...")
@@ -71,6 +63,7 @@ const updateBio = async (): Promise<void> => {
 
 
     await page.evaluateHandle(() => {
+
         // TODO: This should be validated in case there is no bio!
         const bioText = (<HTMLInputElement>document.getElementById("pepBio"));
         bioText.value = `${bioText.value.slice(0, bioText.value.length - 30)}`;
