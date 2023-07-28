@@ -27,18 +27,20 @@ const updateBio = async (progress: string, page: Page) => {
     await page.waitForSelector(selectors.bioTextarea, {timeout: 0});
     await page.locator(selectors.bioTextarea).click();
 
+    const bioElement = await page.$(selectors.bioTextarea)
 
-    await page.evaluateHandle(() => {
+    const bioValue: string = await (await bioElement.getProperty("value")).jsonValue() as string;
 
-        // TODO: This should be validated in case there is no bio!
-        const bioText = (<HTMLInputElement>document.querySelector(selectors.bioTextarea));
-        bioText.value = `${bioText.value.slice(0, bioText.value.length - 30)}`;
-
-        return
-    });
 
     console.log(`Typing ${progress}%...`)
-    await page.type(selectors.bioTextarea, `${progress}%`, {delay: 20})
+    await page.keyboard.down('ControlLeft')
+    await page.keyboard.press('KeyA')
+    await page.keyboard.up('ControlLeft')
+    await page.keyboard.press('Backspace');
+
+    // TODO: This should be validated in case there is no bio!
+
+    await page.type(selectors.bioTextarea, `${bioValue.slice(0, bioValue.length - 30)}\n${progress}%`, {delay: 0})
     await page.locator(selectors.submitButton).click();
 
     console.log("Bio Updated!")
@@ -68,7 +70,7 @@ const openPage = async (): Promise<void> => {
     await updateBio(currentProgress, page)
 
     console.log("Goodbye!")
-    await browser.close();
+    // await browser.close();
 
 };
 
