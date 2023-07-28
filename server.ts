@@ -16,7 +16,7 @@ interface SelectAllOptions {
     action?: "delete" | "copy" | "paste"
 }
 
-const logIn = async (userName: string, password: string, page: Page) => {
+const logIn = async (page: Page, userName: string, password: string) => {
 
     await page.waitForSelector(selectors.emailInput, {timeout: 0});
     console.log("Entering Email...")
@@ -34,7 +34,6 @@ const selectAll = async (page: Page, options: SelectAllOptions) => {
     await page.keyboard.down('ControlLeft')
     await page.keyboard.press('KeyA')
 
-
     if (options.action == selectAction.delete) {
         await page.keyboard.up('ControlLeft');
         await page.keyboard.press('Backspace');
@@ -45,16 +44,16 @@ const selectAll = async (page: Page, options: SelectAllOptions) => {
         await page.keyboard.up('ControlLeft');
         return
     }
-
     if (options.action == selectAction.paste) {
         await page.keyboard.press('KeyV');
         await page.keyboard.up('ControlLeft');
         return
     }
+
     await page.keyboard.up('ControlLeft');
 
 }
-const updateBio = async (progress: string, page: Page) => {
+const updateBio = async (page: Page, content: string) => {
 
     console.log(`Navigating to: ${BIO_PAGE}...`)
     await page.goto(BIO_PAGE)
@@ -64,12 +63,10 @@ const updateBio = async (progress: string, page: Page) => {
     const bioElement = await page.$(selectors.bioTextarea)
     const bioValue: string = await (await bioElement.getProperty("value")).jsonValue() as string;
 
-    // TODO This should have its own function
-    console.log(`Typing ${progress}%...`)
+    console.log(`Typing ${content}...`)
     await selectAll(page, {action: "delete"})
 
-    // TODO: This should be validated in case there is no bio!
-    await page.type(selectors.bioTextarea, `${bioValue.slice(0, bioValue.length - 30)}\n${progress}%`, {delay: 0})
+    await page.type(selectors.bioTextarea, `${bioValue.slice(0, bioValue.length - content.length)}\n${content}`, {delay: 0})
     await page.locator(selectors.submitButton).click();
 
     console.log("Bio Updated!")
@@ -77,9 +74,7 @@ const updateBio = async (progress: string, page: Page) => {
 
 
 const openPage = async (): Promise<void> => {
-    const {progressBar, progressPercentage} = updateProgress()
 
-    const currentProgress = `${progressBar.toString().replaceAll(",", " ")}  ${progressPercentage.toFixed(5)}`;
     const browser = await puppeteer.launch({
         headless: false,
         args: [
@@ -96,8 +91,11 @@ const openPage = async (): Promise<void> => {
     const page = await browser.newPage();
     await page.goto(URL);
 
-    await logIn(process.env.USER_NAME, process.env.PASSWORD, page)
-    await updateBio(currentProgress, page)
+    const {progressBarString, progressPercentage} = updateProgress()
+    const currentProgress = `${progressBarString}  ${progressPercentage.toFixed(5)}%`;
+
+    await logIn(page, process.env.USER_NAME, process.env.PASSWORD)
+    await updateBio(page, currentProgress)
 
     console.log("Goodbye!")
     await browser.close();

@@ -22,7 +22,6 @@ function updateProgress() {
 
     for (let i = 1; i <= 10; i++) {
         if (i <= numberOfBars) {
-
             progressBar.push("⬛")
             continue
         }
@@ -31,7 +30,7 @@ function updateProgress() {
     }
 
 
-    return {progressBar, progressPercentage}
+    return {progressBarString: progressBar.toString().replaceAll(",", " "), progressPercentage}
 }
 
 
