@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv';
 import puppeteer from 'puppeteer';
-import updateProgress from "./progress";
-import {logIn} from "./controller/auth";
 import {URL} from "./model/pages";
-import {updateBio} from "./view/updateBio"
+import {editBio} from "./view/editPageContent"
+import updateProgress from "./controller/progress";
+import {logIn} from "./controller/auth";
 
 dotenv.config()
 
@@ -26,11 +26,12 @@ const openPage = async (): Promise<void> => {
     const page = await browser.newPage();
     await page.goto(URL);
 
+    // This should go to Views folder
     const {progressBarString, progressPercentage} = updateProgress()
     const currentProgress = `${progressBarString}  ${progressPercentage.toFixed(5)}%`;
 
     await logIn(page, process.env.USER_NAME, process.env.PASSWORD)
-    await updateBio(page, currentProgress)
+    await editBio(page, currentProgress)
 
     console.log("Goodbye!")
     await browser.close();

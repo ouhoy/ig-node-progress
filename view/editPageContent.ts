@@ -3,7 +3,7 @@ import {BIO_PAGE} from "../model/pages";
 import selectors from "../model/elements";
 import {selectAll} from "../controller/pageMethods";
 
-export const updateBio = async (page: Page, content: string) => {
+export const editBio = async (page: Page, content: string) => {
 
     console.log(`Navigating to: ${BIO_PAGE}...`)
     await page.goto(BIO_PAGE)
