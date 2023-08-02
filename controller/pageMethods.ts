@@ -33,3 +33,4 @@ export const selectAll = async (page: Page, options: SelectAllOptions) => {
     await page.keyboard.up('ControlLeft');
 
 }
+
